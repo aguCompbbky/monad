@@ -10,6 +10,7 @@ import { MarketplaceTabs } from "~~/components/marketplace/MarketplaceTabs";
 import { PendingDeliveryCard } from "~~/components/marketplace/PendingDeliveryCard";
 import { SectionHeader } from "~~/components/marketplace/SectionHeader";
 import { ESCROW_ABI, ESCROW_ADDRESS } from "~~/constants";
+import { useMarketplaceStore } from "~~/services/store/marketplaceStore";
 import { Listing } from "~~/types/marketplace";
 import { notification } from "~~/utils/scaffold-eth";
 
@@ -23,12 +24,15 @@ const Home: NextPage = () => {
   const [activeTab, setActiveTab] = useState<"myDeals" | "marketplace">("marketplace");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [title, setTitle] = useState("");
+  const [features, setFeatures] = useState("");
   const [priceMon, setPriceMon] = useState("");
   const [pin, setPin] = useState("");
   const [isCreating, setIsCreating] = useState(false);
   const [isBuying, setIsBuying] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
-  const [listingTitles, setListingTitles] = useState<Record<number, string>>({});
+  const listingMetaById = useMarketplaceStore(state => state.listingMetaById);
+  const setListingMeta = useMarketplaceStore(state => state.setListingMeta);
+  const bumpRevision = useMarketplaceStore(state => state.bumpRevision);
 
   const { data: listingCountData, refetch: refetchListingCount } = useReadContract({
     address: ESCROW_ADDRESS,
@@ -59,6 +63,7 @@ const Home: NextPage = () => {
       .map((entry, index) => {
         if (entry.status !== "success" || !entry.result) return null;
         const listingId = index + 1;
+        if (!listingMetaById[listingId]) return null;
         const listingData = entry.result as readonly [
           `0x${string}`,
           `0x${string}`,
@@ -69,7 +74,8 @@ const Home: NextPage = () => {
         ];
         return {
           id: listingId,
-          title: listingTitles[listingId] || `Urun #${listingId}`,
+          title: listingMetaById[listingId]?.title || `Urun #${listingId}`,
+          features: listingMetaById[listingId]?.features || "",
           seller: listingData[0],
           buyer: listingData[1],
           priceWei: listingData[2],
@@ -77,7 +83,7 @@ const Home: NextPage = () => {
         } satisfies Listing;
       })
       .filter((listing): listing is Listing => Boolean(listing));
-  }, [listingTitles, listingsRaw]);
+  }, [listingMetaById, listingsRaw]);
 
   const myDeals = useMemo(() => {
     if (!connectedAddress) return [];
@@ -103,6 +109,7 @@ const Home: NextPage = () => {
 
   const refreshListings = async () => {
     await Promise.all([refetchListingCount(), refetchListings()]);
+    bumpRevision();
   };
 
   const handleCreateListing = async () => {
@@ -121,7 +128,7 @@ const Home: NextPage = () => {
 
     try {
       const priceWei = parseEther(priceMon);
-      const depositWei = priceWei / 10n;
+      const depositWei = priceWei / 100n;
       setIsCreating(true);
       const loadingToastId = notification.loading("Ilan olusturma icin cuzdan onayi bekleniyor...");
 
@@ -140,11 +147,16 @@ const Home: NextPage = () => {
       await refreshListings();
       const newCount = Number((await refetchListingCount()).data ?? 0n);
       if (newCount > 0) {
-        setListingTitles(prev => ({ ...prev, [newCount]: title.trim() }));
+        setListingMeta(newCount, {
+          title: title.trim(),
+          features: features.trim(),
+          createdAt: Date.now(),
+        });
       }
 
       setIsCreateModalOpen(false);
       setTitle("");
+      setFeatures("");
       setPriceMon("");
       setPin("");
     } catch {
@@ -240,10 +252,12 @@ const Home: NextPage = () => {
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
         title={title}
+        features={features}
         priceMon={priceMon}
         pin={pin}
         isCreating={isCreating}
         onTitleChange={setTitle}
+        onFeaturesChange={setFeatures}
         onPriceChange={setPriceMon}
         onPinChange={setPin}
         onSubmit={handleCreateListing}

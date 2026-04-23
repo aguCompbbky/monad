@@ -4,10 +4,12 @@ type CreateListingModalProps = {
   isOpen: boolean;
   onClose: () => void;
   title: string;
+  features: string;
   priceMon: string;
   pin: string;
   isCreating: boolean;
   onTitleChange: (value: string) => void;
+  onFeaturesChange: (value: string) => void;
   onPriceChange: (value: string) => void;
   onPinChange: (value: string) => void;
   onSubmit: () => void;
@@ -17,10 +19,12 @@ export const CreateListingModal = ({
   isOpen,
   onClose,
   title,
+  features,
   priceMon,
   pin,
   isCreating,
   onTitleChange,
+  onFeaturesChange,
   onPriceChange,
   onPinChange,
   onSubmit,
@@ -47,6 +51,15 @@ export const CreateListingModal = ({
             />
           </label>
           <label className="form-control">
+            <span className="label-text text-fuchsia-100">Urun Ozellikleri</span>
+            <textarea
+              className="textarea textarea-bordered bg-black/40"
+              placeholder="Ornek: 128GB, kutulu, ciziksiz"
+              value={features}
+              onChange={e => onFeaturesChange(e.target.value)}
+            />
+          </label>
+          <label className="form-control">
             <span className="label-text text-fuchsia-100">Fiyat (MON)</span>
             <input
               className="input input-bordered bg-black/40"
@@ -65,7 +78,7 @@ export const CreateListingModal = ({
             />
           </label>
           <p className="text-xs text-fuchsia-100/70">
-            Ilan verirken kontrata fiyatin %10&apos;u depozito olarak gonderilir.
+            Ilan verirken kontrata fiyatin %1&apos;i depozito olarak gonderilir.
           </p>
         </div>
         <div className="mt-6 flex justify-end gap-2">

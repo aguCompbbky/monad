@@ -2,7 +2,7 @@
 pragma solidity ^0.8.30;
 
 contract Escrow {
-    uint256 public constant DEPOSIT_BPS = 1000; // 10%
+    uint256 public constant DEPOSIT_BPS = 100; // 1%
 
     enum ListingStatus {
         Created,

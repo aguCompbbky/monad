@@ -13,6 +13,7 @@ export const ListingCard = ({ listing, onBuy, isBuying }: ListingCardProps) => {
     <div className="card bg-base-200/70 border border-fuchsia-900/30 shadow-xl">
       <div className="card-body">
         <h3 className="card-title text-lg">{listing.title}</h3>
+        <p className="text-sm text-base-content/70">Ozellikler: {listing.features || "Belirtilmedi"}</p>
         <p className="text-sm text-base-content/75">Satici: {formatAddress(listing.seller)}</p>
         <div className="flex items-center justify-between mt-2">
           <span className="font-semibold text-fuchsia-300">{formatEther(listing.priceWei)} MON</span>
