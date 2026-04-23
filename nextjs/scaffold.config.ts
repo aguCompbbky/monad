@@ -42,10 +42,8 @@ export const monadTestnet = defineChain({
 });
 
 const scaffoldConfig = {
-  // The networks on which your DApp is live
   targetNetworks: [monadTestnet],
-  // The interval at which your front-end polls the RPC servers for new data (it has no effect if you only target the local network (default is 4000))
-  pollingInterval: 3000,
+  pollingInterval: 1000,
   // This is ours Alchemy's default API key.
   // You can get your own at https://dashboard.alchemyapi.io
   // It's recommended to store it in an env variable:
@@ -67,7 +65,7 @@ const scaffoldConfig = {
   // - "localNetworksOnly": only show when all target networks are local (hardhat/anvil)
   // - "allNetworks": show on any configured target networks
   // - "disabled": completely disable
-  burnerWalletMode: "disabled",
+  burnerWalletMode: "localNetworksOnly",
 } as const satisfies ScaffoldConfig;
 
 export default scaffoldConfig;

@@ -6,7 +6,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 
 const deployedContracts = {
   31337: {
-    YourContract: {
+    Escrow: {
       address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
       abi: [
         {
@@ -15,46 +15,8 @@ const deployedContracts = {
             {
               indexed: true,
               internalType: "uint256",
-              name: "orderId",
+              name: "listingId",
               type: "uint256",
-            },
-          ],
-          name: "OrderCancelled",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "uint256",
-              name: "orderId",
-              type: "uint256",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "sellerPayout",
-              type: "uint256",
-            },
-          ],
-          name: "OrderCompleted",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "uint256",
-              name: "orderId",
-              type: "uint256",
-            },
-            {
-              indexed: true,
-              internalType: "address",
-              name: "seller",
-              type: "address",
             },
             {
               indexed: true,
@@ -65,17 +27,11 @@ const deployedContracts = {
             {
               indexed: false,
               internalType: "uint256",
-              name: "itemPrice",
-              type: "uint256",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "sellerDeposit",
+              name: "sellerPayout",
               type: "uint256",
             },
           ],
-          name: "OrderCreated",
+          name: "DeliveryConfirmed",
           type: "event",
         },
         {
@@ -84,7 +40,7 @@ const deployedContracts = {
             {
               indexed: true,
               internalType: "uint256",
-              name: "orderId",
+              name: "listingId",
               type: "uint256",
             },
             {
@@ -100,7 +56,7 @@ const deployedContracts = {
               type: "uint256",
             },
           ],
-          name: "OrderFunded",
+          name: "ItemPurchased",
           type: "event",
         },
         {
@@ -109,11 +65,29 @@ const deployedContracts = {
             {
               indexed: true,
               internalType: "uint256",
-              name: "orderId",
+              name: "listingId",
+              type: "uint256",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "seller",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "price",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "deposit",
               type: "uint256",
             },
           ],
-          name: "OrderShipped",
+          name: "ListingCreated",
           type: "event",
         },
         {
@@ -133,45 +107,26 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "uint256",
-              name: "itemPrice",
+              name: "listingId",
               type: "uint256",
             },
           ],
-          name: "calculateRequiredDeposit",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "pure",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "orderId",
-              type: "uint256",
-            },
-          ],
-          name: "cancelOrder",
+          name: "buyItem",
           outputs: [],
-          stateMutability: "nonpayable",
+          stateMutability: "payable",
           type: "function",
         },
         {
           inputs: [
             {
               internalType: "uint256",
-              name: "orderId",
+              name: "listingId",
               type: "uint256",
             },
             {
-              internalType: "string",
-              name: "qrCodeRaw",
-              type: "string",
+              internalType: "uint256",
+              name: "pinCode",
+              type: "uint256",
             },
           ],
           name: "confirmDelivery",
@@ -182,66 +137,30 @@ const deployedContracts = {
         {
           inputs: [
             {
-              internalType: "address",
-              name: "buyer",
-              type: "address",
-            },
-            {
               internalType: "uint256",
-              name: "itemPrice",
+              name: "price",
               type: "uint256",
             },
             {
-              internalType: "bytes32",
-              name: "deliveryQrHash",
-              type: "bytes32",
-            },
-            {
-              internalType: "string",
-              name: "itemMetadata",
-              type: "string",
+              internalType: "uint256",
+              name: "pinCode",
+              type: "uint256",
             },
           ],
-          name: "createOrder",
+          name: "createListing",
           outputs: [
             {
               internalType: "uint256",
-              name: "",
+              name: "listingId",
               type: "uint256",
             },
           ],
           stateMutability: "payable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "orderId",
-              type: "uint256",
-            },
-          ],
-          name: "fundOrder",
-          outputs: [],
-          stateMutability: "payable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "orderId",
-              type: "uint256",
-            },
-          ],
-          name: "markShipped",
-          outputs: [],
-          stateMutability: "nonpayable",
           type: "function",
         },
         {
           inputs: [],
-          name: "orderCount",
+          name: "listingCount",
           outputs: [
             {
               internalType: "uint256",
@@ -260,7 +179,7 @@ const deployedContracts = {
               type: "uint256",
             },
           ],
-          name: "orders",
+          name: "listings",
           outputs: [
             {
               internalType: "address",
@@ -274,26 +193,21 @@ const deployedContracts = {
             },
             {
               internalType: "uint256",
-              name: "itemPrice",
+              name: "price",
               type: "uint256",
             },
             {
               internalType: "uint256",
-              name: "sellerDeposit",
+              name: "deposit",
               type: "uint256",
             },
             {
               internalType: "bytes32",
-              name: "deliveryQrHash",
+              name: "pinHash",
               type: "bytes32",
             },
             {
-              internalType: "string",
-              name: "itemMetadata",
-              type: "string",
-            },
-            {
-              internalType: "enum YourContract.OrderStatus",
+              internalType: "enum Escrow.ListingStatus",
               name: "status",
               type: "uint8",
             },

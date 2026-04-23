@@ -2,6 +2,7 @@
 
 import { ShoppingCart, User } from "lucide-react";
 import { formatEther } from "viem";
+import { SELLER_DISPLAY_NAMES } from "~~/constants";
 import { Listing } from "~~/types/marketplace";
 import { formatAddress } from "~~/utils/formatAddress";
 
@@ -9,6 +10,7 @@ type ListingCardProps = {
   listing: Listing;
   onBuy: (listing: Listing) => void;
   isBuying: boolean;
+  isOwner?: boolean;
 };
 
 const statusConfig: Record<number, { label: string; color: string }> = {
@@ -18,20 +20,36 @@ const statusConfig: Record<number, { label: string; color: string }> = {
   3: { label: "İptal", color: "text-red-400 border-red-500/30 bg-red-950/40" },
 };
 
-export const ListingCard = ({ listing, onBuy, isBuying }: ListingCardProps) => {
+export const ListingCard = ({ listing, onBuy, isBuying, isOwner = false }: ListingCardProps) => {
   const status = statusConfig[listing.status] ?? statusConfig[0];
   const priceEth = formatEther(listing.priceWei);
 
   return (
-    <div className="group neon-card glass-card rounded-2xl p-5 flex flex-col gap-3 animate-appear-up">
-      {/* Top row: title + status */}
+    <div
+      className={`group neon-card glass-card rounded-2xl p-5 flex flex-col gap-3 animate-appear-up relative overflow-hidden ${
+        isOwner ? "border-violet-500/40" : ""
+      }`}
+    >
+      {/* Owner stripe */}
+      {isOwner && (
+        <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-violet-500 via-fuchsia-500 to-transparent" />
+      )}
+
+      {/* Top row: title + badges */}
       <div className="flex items-start justify-between gap-2">
         <h3 className="font-bold text-base sm:text-lg text-white leading-tight line-clamp-2 group-hover:text-purple-200 transition-colors">
           {listing.title}
         </h3>
-        <span className={`status-badge shrink-0 border ${status.color} animate-badge-bounce`}>
-          {status.label}
-        </span>
+        <div className="flex flex-col items-end gap-1 shrink-0">
+          {isOwner && (
+            <span className="status-badge text-[10px] text-violet-300 border border-violet-500/40 bg-violet-950/60">
+              ✦ Senin ilanın
+            </span>
+          )}
+          <span className={`status-badge border ${status.color} animate-badge-bounce`}>
+            {status.label}
+          </span>
+        </div>
       </div>
 
       {/* Features */}
@@ -44,7 +62,11 @@ export const ListingCard = ({ listing, onBuy, isBuying }: ListingCardProps) => {
       {/* Seller */}
       <div className="flex items-center gap-1.5 text-xs text-purple-400/70">
         <User className="w-3 h-3 shrink-0" />
-        <span className="font-mono">{formatAddress(listing.seller)}</span>
+        <span className="font-mono">
+          {isOwner
+            ? "Sen"
+            : SELLER_DISPLAY_NAMES[listing.seller.toLowerCase()] ?? formatAddress(listing.seller)}
+        </span>
       </div>
 
       {/* Divider */}
@@ -60,7 +82,11 @@ export const ListingCard = ({ listing, onBuy, isBuying }: ListingCardProps) => {
           </p>
         </div>
 
-        {listing.status === 0 ? (
+        {isOwner ? (
+          <span className="text-xs px-3 py-1.5 rounded-full bg-violet-900/30 border border-violet-700/30 text-violet-300 font-medium">
+            İlan Aktif
+          </span>
+        ) : listing.status === 0 ? (
           <div className="buy-btn-wrapper">
             <button
               className="btn btn-secondary btn-sm gap-1.5 font-bold"
@@ -81,7 +107,7 @@ export const ListingCard = ({ listing, onBuy, isBuying }: ListingCardProps) => {
       </div>
 
       {/* Listing ID watermark */}
-      <div className="absolute top-3 right-3 text-[10px] font-mono text-purple-700/40 pointer-events-none">
+      <div className="absolute bottom-2 right-3 text-[10px] font-mono text-purple-700/30 pointer-events-none">
         #{listing.id}
       </div>
     </div>

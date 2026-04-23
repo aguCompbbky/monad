@@ -10,6 +10,7 @@ import { CreateListingModal } from "~~/components/marketplace/CreateListingModal
 import { ListingCard } from "~~/components/marketplace/ListingCard";
 import { MarketplaceTabs } from "~~/components/marketplace/MarketplaceTabs";
 import { PendingDeliveryCard } from "~~/components/marketplace/PendingDeliveryCard";
+import { PinRevealModal } from "~~/components/marketplace/PinRevealModal";
 import { SectionHeader } from "~~/components/marketplace/SectionHeader";
 import { ESCROW_ABI, ESCROW_ADDRESS } from "~~/constants";
 import { fetchMonadDbProducts, saveMonadDbProduct } from "~~/services/monaddb/client";
@@ -17,7 +18,6 @@ import { useMarketplaceStore } from "~~/services/store/marketplaceStore";
 import { Listing } from "~~/types/marketplace";
 import { notification } from "~~/utils/scaffold-eth";
 
-const MVP_SELLER_ADDRESS = "0xd7a9251D72A390246818cC991E3d811BD090c522".toLowerCase();
 
 const fireConfetti = () => {
   const colors = ["#836ef9", "#c026d3", "#a855f7", "#7c3aed", "#f0abfc", "#ffffff"];
@@ -54,7 +54,7 @@ const Home: NextPage = () => {
   const publicClient = usePublicClient();
   const { writeContractAsync } = useWriteContract();
 
-  const [activeTab, setActiveTab] = useState<"myDeals" | "marketplace">("marketplace");
+  const [activeTab, setActiveTab] = useState<"myListings" | "myDeals" | "marketplace">("marketplace");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [features, setFeatures] = useState("");
@@ -63,6 +63,7 @@ const Home: NextPage = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [isBuying, setIsBuying] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
+  const [pinModal, setPinModal] = useState<{ pin: string; title: string } | null>(null);
 
   const listingMetaById = useMarketplaceStore(state => state.listingMetaById);
   const setProducts = useMarketplaceStore(state => state.setProducts);
@@ -111,27 +112,24 @@ const Home: NextPage = () => {
       .filter((l): l is Listing => Boolean(l));
   }, [listingMetaById, listingsRaw]);
 
-  const myDeals = useMemo(() => {
+  const myListings = useMemo(() => {
     if (!connectedAddress) return [];
-    return listings.filter(
-      l =>
-        l.seller.toLowerCase() === connectedAddress.toLowerCase() ||
-        l.buyer.toLowerCase() === connectedAddress.toLowerCase(),
-    );
+    return listings.filter(l => l.seller.toLowerCase() === connectedAddress.toLowerCase());
   }, [connectedAddress, listings]);
 
-  const marketListings = useMemo(
-    () => listings.filter(l => l.status === 0 && l.seller.toLowerCase() === MVP_SELLER_ADDRESS),
-    [listings],
-  );
+  const myDeals = useMemo(() => {
+    if (!connectedAddress) return [];
+    return listings.filter(l => l.buyer.toLowerCase() === connectedAddress.toLowerCase());
+  }, [connectedAddress, listings]);
 
-  const visibleListings = activeTab === "myDeals" ? myDeals : marketListings;
+  const marketListings = useMemo(() => listings.filter(l => l.status === 0), [listings]);
+
+  const visibleListings =
+    activeTab === "myListings" ? myListings : activeTab === "myDeals" ? myDeals : marketListings;
 
   const pendingForBuyer = useMemo(() => {
     if (!connectedAddress) return [];
-    return myDeals.filter(
-      l => l.status === 1 && l.buyer.toLowerCase() === connectedAddress.toLowerCase(),
-    );
+    return myDeals.filter(l => l.status === 1);
   }, [connectedAddress, myDeals]);
 
   const refreshListings = useCallback(async () => {
@@ -212,6 +210,12 @@ const Home: NextPage = () => {
       notification.success("Satın alma başarılı! 🛒");
       fireConfetti();
       await refreshListings();
+
+      // PIN popup — MonadDB'den PIN varsa göster (MVP: kargocunun söyleyeceği kodu simüle eder)
+      const meta = listingMetaById[listing.id];
+      if (meta?.pin) {
+        setPinModal({ pin: meta.pin, title: listing.title });
+      }
     } catch {
       notification.remove(toastId);
       notification.error("Satın alma işlemi başarısız.");
@@ -263,15 +267,25 @@ const Home: NextPage = () => {
         </div>
 
         {/* Tabs */}
-        <div className="mt-6">
+        <div className="mt-6 flex flex-col sm:flex-row sm:items-center gap-3">
           <MarketplaceTabs activeTab={activeTab} onChange={setActiveTab} />
+          {activeTab === "myListings" && (
+            <span className="text-xs text-purple-400/60">
+              {myListings.length} ilan bulundu
+            </span>
+          )}
         </div>
 
         {/* Listings grid */}
         <div className="mt-5 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {visibleListings.map((listing, i) => (
             <div key={listing.id} style={{ animationDelay: `${i * 60}ms` }}>
-              <ListingCard listing={listing} onBuy={handleBuy} isBuying={isBuying} />
+              <ListingCard
+                listing={listing}
+                onBuy={handleBuy}
+                isBuying={isBuying}
+                isOwner={connectedAddress?.toLowerCase() === listing.seller.toLowerCase()}
+              />
             </div>
           ))}
 
@@ -284,15 +298,21 @@ const Home: NextPage = () => {
                   </div>
                   <div>
                     <p className="font-semibold text-purple-300/60 text-lg">
-                      {activeTab === "marketplace" ? "Henüz ilan yok" : "Aktif işlem bulunamadı"}
+                      {activeTab === "marketplace"
+                        ? "Henüz ilan yok"
+                        : activeTab === "myListings"
+                          ? "Henüz ilan vermediniz"
+                          : "Satın aldığınız ürün yok"}
                     </p>
                     <p className="text-sm text-purple-400/40 mt-1">
                       {activeTab === "marketplace"
                         ? "İlk ilanı sen oluştur!"
-                        : "Cüzdanına bağlı aktif işlem yok."}
+                        : activeTab === "myListings"
+                          ? "Ürününü listele, escrow güvencesiyle sat."
+                          : "Marketplace'ten bir ürün satın alın."}
                     </p>
                   </div>
-                  {activeTab === "marketplace" && (
+                  {(activeTab === "marketplace" || activeTab === "myListings") && (
                     <button
                       className="btn btn-primary btn-sm mt-2"
                       onClick={() => setIsCreateModalOpen(true)}
@@ -340,6 +360,13 @@ const Home: NextPage = () => {
         onPriceChange={setPriceMon}
         onPinChange={setPin}
         onSubmit={handleCreateListing}
+      />
+
+      <PinRevealModal
+        isOpen={!!pinModal}
+        onClose={() => setPinModal(null)}
+        pin={pinModal?.pin ?? ""}
+        productTitle={pinModal?.title ?? ""}
       />
     </>
   );

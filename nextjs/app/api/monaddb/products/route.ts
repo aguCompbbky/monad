@@ -9,6 +9,7 @@ type MonadDbProduct = {
   title: string;
   features: string;
   createdAt: number;
+  pin?: string;
 };
 
 type MonadDbProducts = Record<number, MonadDbProduct>;
@@ -49,6 +50,7 @@ export async function POST(request: NextRequest) {
       listingId?: number;
       title?: string;
       features?: string;
+      pin?: string;
     };
     if (!body.listingId || !body.title?.trim()) {
       return NextResponse.json({ error: "listingId and title required" }, { status: 400 });
@@ -59,6 +61,7 @@ export async function POST(request: NextRequest) {
       title: body.title.trim(),
       features: (body.features || "").trim(),
       createdAt: Date.now(),
+      ...(body.pin ? { pin: body.pin } : {}),
     };
     await writeProducts(products);
 

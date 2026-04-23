@@ -4,6 +4,7 @@ export type ListingMeta = {
   title: string;
   features: string;
   createdAt: number;
+  pin?: string;
 };
 
 type MarketplaceState = {
