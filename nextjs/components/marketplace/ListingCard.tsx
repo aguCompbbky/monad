@@ -29,16 +29,12 @@ export const ListingCard = ({ listing, onBuy, isBuying }: ListingCardProps) => {
         <h3 className="font-bold text-base sm:text-lg text-white leading-tight line-clamp-2 group-hover:text-purple-200 transition-colors">
           {listing.title}
         </h3>
-        <span className={`status-badge shrink-0 border ${status.color} animate-badge-bounce`}>
-          {status.label}
-        </span>
+        <span className={`status-badge shrink-0 border ${status.color} animate-badge-bounce`}>{status.label}</span>
       </div>
 
       {/* Features */}
       {listing.features && (
-        <p className="text-xs text-purple-300/60 line-clamp-2 leading-relaxed">
-          {listing.features}
-        </p>
+        <p className="text-xs text-purple-300/60 line-clamp-2 leading-relaxed">{listing.features}</p>
       )}
 
       {/* Seller */}

@@ -63,7 +63,10 @@
     overflow-x: hidden;
   }
 
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     margin-bottom: 0.5rem;
     line-height: 1;
   }
@@ -107,8 +110,10 @@
   inset: -1px;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, rgba(131,110,249,0.5), rgba(192,38,211,0.3), transparent);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  background: linear-gradient(135deg, rgba(131, 110, 249, 0.5), rgba(192, 38, 211, 0.3), transparent);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   mask-composite: exclude;
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -127,55 +132,126 @@
 
 /* ── Keyframe animations ── */
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 @keyframes float-slow {
-  0%, 100% { transform: translateY(0px) rotate(-2deg); }
-  50% { transform: translateY(-14px) rotate(2deg); }
+  0%,
+  100% {
+    transform: translateY(0px) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(2deg);
+  }
 }
 @keyframes neon-pulse {
-  0%, 100% { box-shadow: 0 0 5px rgba(131,110,249,0.5), 0 0 20px rgba(131,110,249,0.3); }
-  50% { box-shadow: 0 0 15px rgba(131,110,249,0.9), 0 0 40px rgba(131,110,249,0.5), 0 0 80px rgba(131,110,249,0.2); }
+  0%,
+  100% {
+    box-shadow:
+      0 0 5px rgba(131, 110, 249, 0.5),
+      0 0 20px rgba(131, 110, 249, 0.3);
+  }
+  50% {
+    box-shadow:
+      0 0 15px rgba(131, 110, 249, 0.9),
+      0 0 40px rgba(131, 110, 249, 0.5),
+      0 0 80px rgba(131, 110, 249, 0.2);
+  }
 }
 @keyframes shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
 }
 @keyframes scan-line {
-  0% { top: -10%; }
-  100% { top: 110%; }
+  0% {
+    top: -10%;
+  }
+  100% {
+    top: 110%;
+  }
 }
 @keyframes appear-up {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @keyframes eye-glow {
-  0%, 100% { filter: drop-shadow(0 0 3px #c026d3); }
-  50% { filter: drop-shadow(0 0 10px #c026d3) drop-shadow(0 0 20px #836ef9); }
+  0%,
+  100% {
+    filter: drop-shadow(0 0 3px #c026d3);
+  }
+  50% {
+    filter: drop-shadow(0 0 10px #c026d3) drop-shadow(0 0 20px #836ef9);
+  }
 }
 @keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 @keyframes badge-bounce {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.08); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
 }
 @keyframes bg-pan {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
-.animate-float { animation: float 3s ease-in-out infinite; }
-.animate-float-slow { animation: float-slow 4s ease-in-out infinite; }
-.animate-neon-pulse { animation: neon-pulse 2s ease-in-out infinite; }
-.animate-appear-up { animation: appear-up 0.5s ease-out forwards; }
-.animate-eye-glow { animation: eye-glow 2s ease-in-out infinite; }
-.animate-spin-slow { animation: spin-slow 8s linear infinite; }
-.animate-badge-bounce { animation: badge-bounce 2s ease-in-out infinite; }
-.animate-bg-pan { animation: bg-pan 4s ease infinite; background-size: 200% 200%; }
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+.animate-float-slow {
+  animation: float-slow 4s ease-in-out infinite;
+}
+.animate-neon-pulse {
+  animation: neon-pulse 2s ease-in-out infinite;
+}
+.animate-appear-up {
+  animation: appear-up 0.5s ease-out forwards;
+}
+.animate-eye-glow {
+  animation: eye-glow 2s ease-in-out infinite;
+}
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+.animate-badge-bounce {
+  animation: badge-bounce 2s ease-in-out infinite;
+}
+.animate-bg-pan {
+  animation: bg-pan 4s ease infinite;
+  background-size: 200% 200%;
+}
 
 /* ── Shimmer button ── */
 .btn-neon {
@@ -189,7 +265,9 @@
 }
 .btn-neon:hover {
   animation: shimmer 1s linear infinite;
-  box-shadow: 0 0 20px rgba(131,110,249,0.7), 0 0 40px rgba(131,110,249,0.4);
+  box-shadow:
+    0 0 20px rgba(131, 110, 249, 0.7),
+    0 0 40px rgba(131, 110, 249, 0.4);
 }
 
 /* ── Buy button pulse ring ── */
@@ -202,7 +280,7 @@
   position: absolute;
   inset: -3px;
   border-radius: 9999px;
-  border: 2px solid rgba(131,110,249,0.5);
+  border: 2px solid rgba(131, 110, 249, 0.5);
   animation: neon-pulse 2s ease-in-out infinite;
   pointer-events: none;
 }
@@ -218,7 +296,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(131,110,249,0.6), transparent);
+  background: linear-gradient(90deg, transparent, rgba(131, 110, 249, 0.6), transparent);
   animation: scan-line 3s linear infinite;
 }
 
@@ -231,26 +309,31 @@
   @apply shadow-none;
 }
 .btn.btn-primary {
-  box-shadow: 0 0 15px rgba(131,110,249,0.4);
+  box-shadow: 0 0 15px rgba(131, 110, 249, 0.4);
   transition: all 0.2s;
 }
 .btn.btn-primary:hover {
-  box-shadow: 0 0 25px rgba(131,110,249,0.7), 0 0 50px rgba(131,110,249,0.3);
+  box-shadow:
+    0 0 25px rgba(131, 110, 249, 0.7),
+    0 0 50px rgba(131, 110, 249, 0.3);
   transform: translateY(-1px);
 }
 .btn.btn-secondary {
-  box-shadow: 0 0 12px rgba(192,38,211,0.35);
+  box-shadow: 0 0 12px rgba(192, 38, 211, 0.35);
 }
 .btn.btn-secondary:hover {
-  box-shadow: 0 0 20px rgba(192,38,211,0.65);
+  box-shadow: 0 0 20px rgba(192, 38, 211, 0.65);
   transform: translateY(-1px);
 }
 
 /* ── Input neon focus ── */
-.input:focus, .textarea:focus {
+.input:focus,
+.textarea:focus {
   outline: none;
-  border-color: rgba(131,110,249,0.7);
-  box-shadow: 0 0 0 2px rgba(131,110,249,0.2), 0 0 15px rgba(131,110,249,0.15);
+  border-color: rgba(131, 110, 249, 0.7);
+  box-shadow:
+    0 0 0 2px rgba(131, 110, 249, 0.2),
+    0 0 15px rgba(131, 110, 249, 0.15);
 }
 
 /* ── Status badge ── */

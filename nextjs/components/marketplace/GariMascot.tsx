@@ -73,7 +73,9 @@ export const GariMascot = ({ size = 80, className = "" }: GariMascotProps) => {
 
       {/* Chest "G" badge */}
       <rect x="30" y="61" width="20" height="16" rx="4" fill="rgba(0,0,0,0.35)" />
-      <text x="40" y="73" textAnchor="middle" fill="#c026d3" fontSize="11" fontWeight="900" filter="url(#glow)">G</text>
+      <text x="40" y="73" textAnchor="middle" fill="#c026d3" fontSize="11" fontWeight="900" filter="url(#glow)">
+        G
+      </text>
 
       {/* Left arm */}
       <rect x="2" y="54" width="12" height="8" rx="4" fill="#5b21b6" />

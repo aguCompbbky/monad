@@ -20,9 +20,11 @@ export const MarketplaceTabs = ({ activeTab, onChange }: MarketplaceTabsProps) =
             onClick={() => onChange(tab.id)}
             className={`
               relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300
-              ${isActive
-                ? "bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-lg shadow-purple-900/50"
-                : "text-purple-400 hover:text-purple-200 hover:bg-purple-900/30"}
+              ${
+                isActive
+                  ? "bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-lg shadow-purple-900/50"
+                  : "text-purple-400 hover:text-purple-200 hover:bg-purple-900/30"
+              }
             `}
           >
             <span>{tab.icon}</span>

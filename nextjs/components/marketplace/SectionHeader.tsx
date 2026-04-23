@@ -1,13 +1,9 @@
 "use client";
 
-import { Plus, ShieldCheck, Zap } from "lucide-react";
+import { ShieldCheck, Zap } from "lucide-react";
 import { GariMascot } from "~~/components/marketplace/GariMascot";
 
-type SectionHeaderProps = {
-  onCreateListing: () => void;
-};
-
-export const SectionHeader = ({ onCreateListing }: SectionHeaderProps) => {
+export const SectionHeader = () => {
   return (
     <div className="relative rounded-2xl overflow-hidden neon-grid border border-purple-800/30 bg-gradient-to-br from-purple-950/60 to-black/60 px-5 py-6 sm:px-8 sm:py-8">
       {/* Ambient glow blobs */}
@@ -58,13 +54,10 @@ export const SectionHeader = ({ onCreateListing }: SectionHeaderProps) => {
             ))}
           </div>
 
-          <button
-            className="btn btn-primary mt-5 gap-2 px-5 text-sm font-bold animate-neon-pulse"
-            onClick={onCreateListing}
-          >
-            <Plus className="h-4 w-4" />
-            İlan Oluştur
-          </button>
+          <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-950/50 px-4 py-1.5 text-xs font-semibold text-purple-200">
+            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-ping inline-block" />3 kürate ürün · 10 sn
+            kargo simülasyonu · PIN ile ödeme serbest
+          </p>
         </div>
 
         {/* Right: Mascot */}

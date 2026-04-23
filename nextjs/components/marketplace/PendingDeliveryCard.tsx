@@ -50,9 +50,7 @@ export const PendingDeliveryCard = ({ listing, isConfirming, onConfirm }: Pendin
             <div
               key={i}
               className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                i < pin.length
-                  ? "bg-purple-400 shadow-[0_0_6px_2px_rgba(131,110,249,0.7)]"
-                  : "bg-purple-900/50"
+                i < pin.length ? "bg-purple-400 shadow-[0_0_6px_2px_rgba(131,110,249,0.7)]" : "bg-purple-900/50"
               }`}
             />
           ))}
