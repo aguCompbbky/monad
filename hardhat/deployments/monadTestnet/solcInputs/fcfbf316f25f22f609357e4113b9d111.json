@@ -1,0 +1,36 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/GariEscrow.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.30;\n\n/**\n * @title GariEscrow\n * @notice Buyer-initiated single-transaction escrow.\n *   1. Buyer calls `lock(seller, pinHash)` with value = price. Funds are held in the contract.\n *   2. Buyer later calls `release(orderId, pinCode)`. If keccak256(abi.encodePacked(pinCode))\n *      matches the stored pinHash, funds are forwarded to the seller.\n *   3. If the buyer never gets the PIN, they can `refund(orderId)` after REFUND_DELAY.\n *\n * This contract is intentionally minimal and requires no action from the seller before a sale.\n */\ncontract GariEscrow {\n    enum Status {\n        None,\n        Locked,\n        Released,\n        Refunded\n    }\n\n    struct Order {\n        address buyer;\n        address seller;\n        uint256 amount;\n        bytes32 pinHash;\n        uint64 lockedAt;\n        Status status;\n    }\n\n    uint256 public constant REFUND_DELAY = 7 days;\n\n    uint256 public orderCount;\n    mapping(uint256 => Order) public orders;\n\n    event OrderLocked(\n        uint256 indexed orderId,\n        address indexed buyer,\n        address indexed seller,\n        uint256 amount,\n        bytes32 pinHash\n    );\n    event OrderReleased(uint256 indexed orderId, address indexed seller, uint256 amount);\n    event OrderRefunded(uint256 indexed orderId, address indexed buyer, uint256 amount);\n\n    /**\n     * @notice Lock `msg.value` in escrow targeted at `seller`.\n     *         The PIN that can release the funds is pre-committed via `pinHash`.\n     * @return orderId The newly created order identifier.\n     */\n    function lock(address seller, bytes32 pinHash) external payable returns (uint256 orderId) {\n        require(seller != address(0), \"Seller required\");\n        require(seller != msg.sender, \"Seller cannot buy own item\");\n        require(msg.value > 0, \"Zero value\");\n        require(pinHash != bytes32(0), \"PIN hash required\");\n\n        orderId = ++orderCount;\n        orders[orderId] = Order({\n            buyer: msg.sender,\n            seller: seller,\n            amount: msg.value,\n            pinHash: pinHash,\n            lockedAt: uint64(block.timestamp),\n            status: Status.Locked\n        });\n\n        emit OrderLocked(orderId, msg.sender, seller, msg.value, pinHash);\n    }\n\n    /**\n     * @notice Verify PIN and forward the escrowed amount to the seller.\n     * @dev Only the original buyer can call this. Even if the PIN leaks,\n     *      funds are always routed to the pre-declared seller.\n     */\n    function release(uint256 orderId, uint256 pinCode) external {\n        Order storage order = orders[orderId];\n        require(order.status == Status.Locked, \"Order not locked\");\n        require(msg.sender == order.buyer, \"Only buyer\");\n        require(keccak256(abi.encodePacked(pinCode)) == order.pinHash, \"Invalid PIN\");\n\n        order.status = Status.Released;\n        uint256 amount = order.amount;\n        address seller = order.seller;\n\n        (bool ok, ) = seller.call{value: amount}(\"\");\n        require(ok, \"Transfer failed\");\n\n        emit OrderReleased(orderId, seller, amount);\n    }\n\n    /**\n     * @notice Refund the buyer if the PIN never arrives. Available after REFUND_DELAY.\n     */\n    function refund(uint256 orderId) external {\n        Order storage order = orders[orderId];\n        require(order.status == Status.Locked, \"Order not locked\");\n        require(msg.sender == order.buyer, \"Only buyer\");\n        require(block.timestamp >= order.lockedAt + REFUND_DELAY, \"Too early\");\n\n        order.status = Status.Refunded;\n        uint256 amount = order.amount;\n\n        (bool ok, ) = order.buyer.call{value: amount}(\"\");\n        require(ok, \"Refund failed\");\n\n        emit OrderRefunded(orderId, order.buyer, amount);\n    }\n}\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "evmVersion": "paris",
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}

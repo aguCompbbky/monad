@@ -1,0 +1,379 @@
+{
+  "address": "0x982bCFe88062Bb5679905959ADD4Ad733f57762E",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "orderId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "buyer",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "seller",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "pinHash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "OrderLocked",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "orderId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "buyer",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "OrderRefunded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "orderId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "seller",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "OrderReleased",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "REFUND_DELAY",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "seller",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "pinHash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "lock",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "orderId",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "orderCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "orders",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "buyer",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "seller",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "pinHash",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint64",
+          "name": "lockedAt",
+          "type": "uint64"
+        },
+        {
+          "internalType": "enum GariEscrow.Status",
+          "name": "status",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "orderId",
+          "type": "uint256"
+        }
+      ],
+      "name": "refund",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "orderId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "pinCode",
+          "type": "uint256"
+        }
+      ],
+      "name": "release",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x41d78b742eaf37a6f19f9e5ffaf4f7bed3603ca2a87bcb29c21a4b71524bc789",
+  "receipt": {
+    "to": null,
+    "from": "0x832d925198A6CD153beDe280f3AecbaBCd9D0Ec3",
+    "contractAddress": "0x982bCFe88062Bb5679905959ADD4Ad733f57762E",
+    "transactionIndex": 1,
+    "gasUsed": "585968",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xf90f309f8a2a5aca43e0876cb95112beba5b3ee84690066ac7a75586a960ce08",
+    "transactionHash": "0x41d78b742eaf37a6f19f9e5ffaf4f7bed3603ca2a87bcb29c21a4b71524bc789",
+    "logs": [],
+    "blockNumber": 27313616,
+    "cumulativeGasUsed": "585968",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "fcfbf316f25f22f609357e4113b9d111",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.30+commit.73712a01\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"orderId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"buyer\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"pinHash\",\"type\":\"bytes32\"}],\"name\":\"OrderLocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"orderId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"buyer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"OrderRefunded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"orderId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"OrderReleased\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"REFUND_DELAY\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"pinHash\",\"type\":\"bytes32\"}],\"name\":\"lock\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"orderId\",\"type\":\"uint256\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"orderCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"orders\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"buyer\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"bytes32\",\"name\":\"pinHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"lockedAt\",\"type\":\"uint64\"},{\"internalType\":\"enum GariEscrow.Status\",\"name\":\"status\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"orderId\",\"type\":\"uint256\"}],\"name\":\"refund\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"orderId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"pinCode\",\"type\":\"uint256\"}],\"name\":\"release\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"lock(address,bytes32)\":{\"returns\":{\"orderId\":\"The newly created order identifier.\"}},\"release(uint256,uint256)\":{\"details\":\"Only the original buyer can call this. Even if the PIN leaks,      funds are always routed to the pre-declared seller.\"}},\"title\":\"GariEscrow\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"lock(address,bytes32)\":{\"notice\":\"Lock `msg.value` in escrow targeted at `seller`.         The PIN that can release the funds is pre-committed via `pinHash`.\"},\"refund(uint256)\":{\"notice\":\"Refund the buyer if the PIN never arrives. Available after REFUND_DELAY.\"},\"release(uint256,uint256)\":{\"notice\":\"Verify PIN and forward the escrowed amount to the seller.\"}},\"notice\":\"Buyer-initiated single-transaction escrow.   1. Buyer calls `lock(seller, pinHash)` with value = price. Funds are held in the contract.   2. Buyer later calls `release(orderId, pinCode)`. If keccak256(abi.encodePacked(pinCode))      matches the stored pinHash, funds are forwarded to the seller.   3. If the buyer never gets the PIN, they can `refund(orderId)` after REFUND_DELAY. This contract is intentionally minimal and requires no action from the seller before a sale.\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/GariEscrow.sol\":\"GariEscrow\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/GariEscrow.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.30;\\n\\n/**\\n * @title GariEscrow\\n * @notice Buyer-initiated single-transaction escrow.\\n *   1. Buyer calls `lock(seller, pinHash)` with value = price. Funds are held in the contract.\\n *   2. Buyer later calls `release(orderId, pinCode)`. If keccak256(abi.encodePacked(pinCode))\\n *      matches the stored pinHash, funds are forwarded to the seller.\\n *   3. If the buyer never gets the PIN, they can `refund(orderId)` after REFUND_DELAY.\\n *\\n * This contract is intentionally minimal and requires no action from the seller before a sale.\\n */\\ncontract GariEscrow {\\n    enum Status {\\n        None,\\n        Locked,\\n        Released,\\n        Refunded\\n    }\\n\\n    struct Order {\\n        address buyer;\\n        address seller;\\n        uint256 amount;\\n        bytes32 pinHash;\\n        uint64 lockedAt;\\n        Status status;\\n    }\\n\\n    uint256 public constant REFUND_DELAY = 7 days;\\n\\n    uint256 public orderCount;\\n    mapping(uint256 => Order) public orders;\\n\\n    event OrderLocked(\\n        uint256 indexed orderId,\\n        address indexed buyer,\\n        address indexed seller,\\n        uint256 amount,\\n        bytes32 pinHash\\n    );\\n    event OrderReleased(uint256 indexed orderId, address indexed seller, uint256 amount);\\n    event OrderRefunded(uint256 indexed orderId, address indexed buyer, uint256 amount);\\n\\n    /**\\n     * @notice Lock `msg.value` in escrow targeted at `seller`.\\n     *         The PIN that can release the funds is pre-committed via `pinHash`.\\n     * @return orderId The newly created order identifier.\\n     */\\n    function lock(address seller, bytes32 pinHash) external payable returns (uint256 orderId) {\\n        require(seller != address(0), \\\"Seller required\\\");\\n        require(seller != msg.sender, \\\"Seller cannot buy own item\\\");\\n        require(msg.value > 0, \\\"Zero value\\\");\\n        require(pinHash != bytes32(0), \\\"PIN hash required\\\");\\n\\n        orderId = ++orderCount;\\n        orders[orderId] = Order({\\n            buyer: msg.sender,\\n            seller: seller,\\n            amount: msg.value,\\n            pinHash: pinHash,\\n            lockedAt: uint64(block.timestamp),\\n            status: Status.Locked\\n        });\\n\\n        emit OrderLocked(orderId, msg.sender, seller, msg.value, pinHash);\\n    }\\n\\n    /**\\n     * @notice Verify PIN and forward the escrowed amount to the seller.\\n     * @dev Only the original buyer can call this. Even if the PIN leaks,\\n     *      funds are always routed to the pre-declared seller.\\n     */\\n    function release(uint256 orderId, uint256 pinCode) external {\\n        Order storage order = orders[orderId];\\n        require(order.status == Status.Locked, \\\"Order not locked\\\");\\n        require(msg.sender == order.buyer, \\\"Only buyer\\\");\\n        require(keccak256(abi.encodePacked(pinCode)) == order.pinHash, \\\"Invalid PIN\\\");\\n\\n        order.status = Status.Released;\\n        uint256 amount = order.amount;\\n        address seller = order.seller;\\n\\n        (bool ok, ) = seller.call{value: amount}(\\\"\\\");\\n        require(ok, \\\"Transfer failed\\\");\\n\\n        emit OrderReleased(orderId, seller, amount);\\n    }\\n\\n    /**\\n     * @notice Refund the buyer if the PIN never arrives. Available after REFUND_DELAY.\\n     */\\n    function refund(uint256 orderId) external {\\n        Order storage order = orders[orderId];\\n        require(order.status == Status.Locked, \\\"Order not locked\\\");\\n        require(msg.sender == order.buyer, \\\"Only buyer\\\");\\n        require(block.timestamp >= order.lockedAt + REFUND_DELAY, \\\"Too early\\\");\\n\\n        order.status = Status.Refunded;\\n        uint256 amount = order.amount;\\n\\n        (bool ok, ) = order.buyer.call{value: amount}(\\\"\\\");\\n        require(ok, \\\"Refund failed\\\");\\n\\n        emit OrderRefunded(orderId, order.buyer, amount);\\n    }\\n}\\n\",\"keccak256\":\"0xe99d7a602d833c38f683b97f4c73dd1b8c327b490a86ca52d6fff39645011d4e\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b506109898061001f6000396000f3fe6080604052600436106100555760003560e01c8063190da5951461005a5780632453ffa814610084578063278ecde11461009a578063366a4120146100bc578063a85c38ef146100dc578063bc25a8101461015b575b600080fd5b34801561006657600080fd5b5061007162093a8081565b6040519081526020015b60405180910390f35b34801561009057600080fd5b5061007160005481565b3480156100a657600080fd5b506100ba6100b536600461081d565b61016e565b005b3480156100c857600080fd5b506100ba6100d7366004610836565b61037d565b3480156100e857600080fd5b506101496100f736600461081d565b6001602081905260009182526040909120805491810154600282015460038301546004909301546001600160a01b039485169490921692909167ffffffffffffffff811690600160401b900460ff1686565b60405161007b9695949392919061086e565b6100716101693660046108d3565b61059d565b6000818152600160208190526040909120906004820154600160401b900460ff1660038111156101a0576101a0610858565b146101e55760405162461bcd60e51b815260206004820152601060248201526f13dc99195c881b9bdd081b1bd8dad95960821b60448201526064015b60405180910390fd5b80546001600160a01b0316331461022b5760405162461bcd60e51b815260206004820152600a60248201526927b7363c90313abcb2b960b11b60448201526064016101dc565b60048101546102489062093a809067ffffffffffffffff16610921565b4210156102835760405162461bcd60e51b8152602060048201526009602482015268546f6f206561726c7960b81b60448201526064016101dc565b60048101805460ff60401b191668030000000000000000179055600281015481546040516000916001600160a01b03169083908381818185875af1925050503d80600081146102ee576040519150601f19603f3d011682016040523d82523d6000602084013e6102f3565b606091505b50509050806103345760405162461bcd60e51b815260206004820152600d60248201526c1499599d5b990819985a5b1959609a1b60448201526064016101dc565b82546040518381526001600160a01b039091169085907fe18debf292fbfc1f009a15d4e4932c1da2be34d7343f86f50989d09a04571e1b9060200160405180910390a350505050565b6000828152600160208190526040909120906004820154600160401b900460ff1660038111156103af576103af610858565b146103ef5760405162461bcd60e51b815260206004820152601060248201526f13dc99195c881b9bdd081b1bd8dad95960821b60448201526064016101dc565b80546001600160a01b031633146104355760405162461bcd60e51b815260206004820152600a60248201526927b7363c90313abcb2b960b11b60448201526064016101dc565b600381015460408051602081018590520160405160208183030381529060405280519060200120146104975760405162461bcd60e51b815260206004820152600b60248201526a24b73b30b634b2102824a760a91b60448201526064016101dc565b60048101805460ff60401b191668020000000000000000179055600281015460018201546040516001600160a01b0390911690600090829084908381818185875af1925050503d8060008114610509576040519150601f19603f3d011682016040523d82523d6000602084013e61050e565b606091505b50509050806105515760405162461bcd60e51b815260206004820152600f60248201526e151c985b9cd9995c8819985a5b1959608a1b60448201526064016101dc565b816001600160a01b0316867fd91f42113b172b52ce79098fcccffbdce809144244eae0a9aba15aa700714ee08560405161058d91815260200190565b60405180910390a3505050505050565b60006001600160a01b0383166105e75760405162461bcd60e51b815260206004820152600f60248201526e14d95b1b195c881c995c5d5a5c9959608a1b60448201526064016101dc565b336001600160a01b0384160361063f5760405162461bcd60e51b815260206004820152601a60248201527f53656c6c65722063616e6e6f7420627579206f776e206974656d00000000000060448201526064016101dc565b6000341161067c5760405162461bcd60e51b815260206004820152600a6024820152695a65726f2076616c756560b01b60448201526064016101dc565b816106bd5760405162461bcd60e51b8152602060048201526011602482015270141253881a185cda081c995c5d5a5c9959607a1b60448201526064016101dc565b60008081546106cb9061093a565b91829055506040805160c0810182523381526001600160a01b038616602082015234918101919091526060810184905267ffffffffffffffff4216608082015290915060a0810160019052600082815260016020818152604092839020845181546001600160a01b039182166001600160a01b031991821617835592860151938201805494909116939092169290921790559082015160028201556060820151600380830191909155608083015160048301805467ffffffffffffffff90921667ffffffffffffffff1983168117825560a086015193919268ffffffffffffffffff19161790600160401b9084908111156107c8576107c8610858565b02179055505060408051348152602081018590526001600160a01b0386169250339184917f58f3142d0ef88a27b983ec19f66c1d373d6f2cab241a4c62dafde8201e8061f7910160405180910390a492915050565b60006020828403121561082f57600080fd5b5035919050565b6000806040838503121561084957600080fd5b50508035926020909101359150565b634e487b7160e01b600052602160045260246000fd5b6001600160a01b03878116825286166020820152604081018590526060810184905267ffffffffffffffff8316608082015260c08101600483106108c257634e487b7160e01b600052602160045260246000fd5b8260a0830152979650505050505050565b600080604083850312156108e657600080fd5b82356001600160a01b03811681146108fd57600080fd5b946020939093013593505050565b634e487b7160e01b600052601160045260246000fd5b808201808211156109345761093461090b565b92915050565b60006001820161094c5761094c61090b565b506001019056fea264697066735822122071ef61fab9b75a6ad11c7552424d9e9fccd8c1aeb06933582a6c5133b6a2656464736f6c634300081e0033",
+  "deployedBytecode": "0x6080604052600436106100555760003560e01c8063190da5951461005a5780632453ffa814610084578063278ecde11461009a578063366a4120146100bc578063a85c38ef146100dc578063bc25a8101461015b575b600080fd5b34801561006657600080fd5b5061007162093a8081565b6040519081526020015b60405180910390f35b34801561009057600080fd5b5061007160005481565b3480156100a657600080fd5b506100ba6100b536600461081d565b61016e565b005b3480156100c857600080fd5b506100ba6100d7366004610836565b61037d565b3480156100e857600080fd5b506101496100f736600461081d565b6001602081905260009182526040909120805491810154600282015460038301546004909301546001600160a01b039485169490921692909167ffffffffffffffff811690600160401b900460ff1686565b60405161007b9695949392919061086e565b6100716101693660046108d3565b61059d565b6000818152600160208190526040909120906004820154600160401b900460ff1660038111156101a0576101a0610858565b146101e55760405162461bcd60e51b815260206004820152601060248201526f13dc99195c881b9bdd081b1bd8dad95960821b60448201526064015b60405180910390fd5b80546001600160a01b0316331461022b5760405162461bcd60e51b815260206004820152600a60248201526927b7363c90313abcb2b960b11b60448201526064016101dc565b60048101546102489062093a809067ffffffffffffffff16610921565b4210156102835760405162461bcd60e51b8152602060048201526009602482015268546f6f206561726c7960b81b60448201526064016101dc565b60048101805460ff60401b191668030000000000000000179055600281015481546040516000916001600160a01b03169083908381818185875af1925050503d80600081146102ee576040519150601f19603f3d011682016040523d82523d6000602084013e6102f3565b606091505b50509050806103345760405162461bcd60e51b815260206004820152600d60248201526c1499599d5b990819985a5b1959609a1b60448201526064016101dc565b82546040518381526001600160a01b039091169085907fe18debf292fbfc1f009a15d4e4932c1da2be34d7343f86f50989d09a04571e1b9060200160405180910390a350505050565b6000828152600160208190526040909120906004820154600160401b900460ff1660038111156103af576103af610858565b146103ef5760405162461bcd60e51b815260206004820152601060248201526f13dc99195c881b9bdd081b1bd8dad95960821b60448201526064016101dc565b80546001600160a01b031633146104355760405162461bcd60e51b815260206004820152600a60248201526927b7363c90313abcb2b960b11b60448201526064016101dc565b600381015460408051602081018590520160405160208183030381529060405280519060200120146104975760405162461bcd60e51b815260206004820152600b60248201526a24b73b30b634b2102824a760a91b60448201526064016101dc565b60048101805460ff60401b191668020000000000000000179055600281015460018201546040516001600160a01b0390911690600090829084908381818185875af1925050503d8060008114610509576040519150601f19603f3d011682016040523d82523d6000602084013e61050e565b606091505b50509050806105515760405162461bcd60e51b815260206004820152600f60248201526e151c985b9cd9995c8819985a5b1959608a1b60448201526064016101dc565b816001600160a01b0316867fd91f42113b172b52ce79098fcccffbdce809144244eae0a9aba15aa700714ee08560405161058d91815260200190565b60405180910390a3505050505050565b60006001600160a01b0383166105e75760405162461bcd60e51b815260206004820152600f60248201526e14d95b1b195c881c995c5d5a5c9959608a1b60448201526064016101dc565b336001600160a01b0384160361063f5760405162461bcd60e51b815260206004820152601a60248201527f53656c6c65722063616e6e6f7420627579206f776e206974656d00000000000060448201526064016101dc565b6000341161067c5760405162461bcd60e51b815260206004820152600a6024820152695a65726f2076616c756560b01b60448201526064016101dc565b816106bd5760405162461bcd60e51b8152602060048201526011602482015270141253881a185cda081c995c5d5a5c9959607a1b60448201526064016101dc565b60008081546106cb9061093a565b91829055506040805160c0810182523381526001600160a01b038616602082015234918101919091526060810184905267ffffffffffffffff4216608082015290915060a0810160019052600082815260016020818152604092839020845181546001600160a01b039182166001600160a01b031991821617835592860151938201805494909116939092169290921790559082015160028201556060820151600380830191909155608083015160048301805467ffffffffffffffff90921667ffffffffffffffff1983168117825560a086015193919268ffffffffffffffffff19161790600160401b9084908111156107c8576107c8610858565b02179055505060408051348152602081018590526001600160a01b0386169250339184917f58f3142d0ef88a27b983ec19f66c1d373d6f2cab241a4c62dafde8201e8061f7910160405180910390a492915050565b60006020828403121561082f57600080fd5b5035919050565b6000806040838503121561084957600080fd5b50508035926020909101359150565b634e487b7160e01b600052602160045260246000fd5b6001600160a01b03878116825286166020820152604081018590526060810184905267ffffffffffffffff8316608082015260c08101600483106108c257634e487b7160e01b600052602160045260246000fd5b8260a0830152979650505050505050565b600080604083850312156108e657600080fd5b82356001600160a01b03811681146108fd57600080fd5b946020939093013593505050565b634e487b7160e01b600052601160045260246000fd5b808201808211156109345761093461090b565b92915050565b60006001820161094c5761094c61090b565b506001019056fea264697066735822122071ef61fab9b75a6ad11c7552424d9e9fccd8c1aeb06933582a6c5133b6a2656464736f6c634300081e0033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "lock(address,bytes32)": {
+        "returns": {
+          "orderId": "The newly created order identifier."
+        }
+      },
+      "release(uint256,uint256)": {
+        "details": "Only the original buyer can call this. Even if the PIN leaks,      funds are always routed to the pre-declared seller."
+      }
+    },
+    "title": "GariEscrow",
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "lock(address,bytes32)": {
+        "notice": "Lock `msg.value` in escrow targeted at `seller`.         The PIN that can release the funds is pre-committed via `pinHash`."
+      },
+      "refund(uint256)": {
+        "notice": "Refund the buyer if the PIN never arrives. Available after REFUND_DELAY."
+      },
+      "release(uint256,uint256)": {
+        "notice": "Verify PIN and forward the escrowed amount to the seller."
+      }
+    },
+    "notice": "Buyer-initiated single-transaction escrow.   1. Buyer calls `lock(seller, pinHash)` with value = price. Funds are held in the contract.   2. Buyer later calls `release(orderId, pinCode)`. If keccak256(abi.encodePacked(pinCode))      matches the stored pinHash, funds are forwarded to the seller.   3. If the buyer never gets the PIN, they can `refund(orderId)` after REFUND_DELAY. This contract is intentionally minimal and requires no action from the seller before a sale.",
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 26,
+        "contract": "contracts/GariEscrow.sol:GariEscrow",
+        "label": "orderCount",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 31,
+        "contract": "contracts/GariEscrow.sol:GariEscrow",
+        "label": "orders",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_mapping(t_uint256,t_struct(Order)21_storage)"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_bytes32": {
+        "encoding": "inplace",
+        "label": "bytes32",
+        "numberOfBytes": "32"
+      },
+      "t_enum(Status)7": {
+        "encoding": "inplace",
+        "label": "enum GariEscrow.Status",
+        "numberOfBytes": "1"
+      },
+      "t_mapping(t_uint256,t_struct(Order)21_storage)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => struct GariEscrow.Order)",
+        "numberOfBytes": "32",
+        "value": "t_struct(Order)21_storage"
+      },
+      "t_struct(Order)21_storage": {
+        "encoding": "inplace",
+        "label": "struct GariEscrow.Order",
+        "members": [
+          {
+            "astId": 9,
+            "contract": "contracts/GariEscrow.sol:GariEscrow",
+            "label": "buyer",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_address"
+          },
+          {
+            "astId": 11,
+            "contract": "contracts/GariEscrow.sol:GariEscrow",
+            "label": "seller",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address"
+          },
+          {
+            "astId": 13,
+            "contract": "contracts/GariEscrow.sol:GariEscrow",
+            "label": "amount",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 15,
+            "contract": "contracts/GariEscrow.sol:GariEscrow",
+            "label": "pinHash",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_bytes32"
+          },
+          {
+            "astId": 17,
+            "contract": "contracts/GariEscrow.sol:GariEscrow",
+            "label": "lockedAt",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint64"
+          },
+          {
+            "astId": 20,
+            "contract": "contracts/GariEscrow.sol:GariEscrow",
+            "label": "status",
+            "offset": 8,
+            "slot": "4",
+            "type": "t_enum(Status)7"
+          }
+        ],
+        "numberOfBytes": "160"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      },
+      "t_uint64": {
+        "encoding": "inplace",
+        "label": "uint64",
+        "numberOfBytes": "8"
+      }
+    }
+  }
+}
