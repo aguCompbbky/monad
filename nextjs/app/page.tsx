@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { NextPage } from "next";
 import { parseEther } from "viem";
 import { useAccount, usePublicClient, useReadContract, useReadContracts, useWriteContract } from "wagmi";
@@ -10,6 +10,7 @@ import { MarketplaceTabs } from "~~/components/marketplace/MarketplaceTabs";
 import { PendingDeliveryCard } from "~~/components/marketplace/PendingDeliveryCard";
 import { SectionHeader } from "~~/components/marketplace/SectionHeader";
 import { ESCROW_ABI, ESCROW_ADDRESS } from "~~/constants";
+import { fetchMonadDbProducts, saveMonadDbProduct } from "~~/services/monaddb/client";
 import { useMarketplaceStore } from "~~/services/store/marketplaceStore";
 import { Listing } from "~~/types/marketplace";
 import { notification } from "~~/utils/scaffold-eth";
@@ -31,6 +32,7 @@ const Home: NextPage = () => {
   const [isBuying, setIsBuying] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
   const listingMetaById = useMarketplaceStore(state => state.listingMetaById);
+  const setProducts = useMarketplaceStore(state => state.setProducts);
   const setListingMeta = useMarketplaceStore(state => state.setListingMeta);
   const bumpRevision = useMarketplaceStore(state => state.bumpRevision);
 
@@ -112,6 +114,24 @@ const Home: NextPage = () => {
     bumpRevision();
   };
 
+  useEffect(() => {
+    let isCancelled = false;
+    const loadProducts = async () => {
+      try {
+        const products = await fetchMonadDbProducts();
+        if (!isCancelled) {
+          setProducts(products);
+        }
+      } catch {
+        notification.warning("MonadDB urun verisi alinamadi.");
+      }
+    };
+    loadProducts();
+    return () => {
+      isCancelled = true;
+    };
+  }, [setProducts]);
+
   const handleCreateListing = async () => {
     if (!title.trim()) {
       notification.error("Urun adi gerekli.");
@@ -147,11 +167,18 @@ const Home: NextPage = () => {
       await refreshListings();
       const newCount = Number((await refetchListingCount()).data ?? 0n);
       if (newCount > 0) {
-        setListingMeta(newCount, {
+        const nextMeta = {
           title: title.trim(),
           features: features.trim(),
           createdAt: Date.now(),
+        };
+        setListingMeta(newCount, nextMeta);
+        const products = await saveMonadDbProduct({
+          listingId: newCount,
+          title: nextMeta.title,
+          features: nextMeta.features,
         });
+        setProducts(products);
       }
 
       setIsCreateModalOpen(false);
