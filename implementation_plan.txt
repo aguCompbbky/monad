@@ -1,0 +1,34 @@
+Bu proje ikinci el eşya satan bir site tasarlıyacaktır.
+Bu projenin en önemli kısmı MONAD alt yapısını kullanacak olmasıdır.
+Proje şu şekilde çalışacak satıcı ürünü yollayacak kullanıcı ürünü kargocudan aldığı zaman qr kodu okutup ödeme gerçekleştirecek.
+Sistem: Satıcı, örneğin 100 dolarlık bir ürün satıyorsa, akıllı kontrata 10 dolarlık bir "Güven Depozitosu" kilitler.
+
+Amaç merkeziyetsiz alıcı satıcı arasında bir çözüm bulmaktır.
+
+akıllı kontractlar hardhat/contracts altında yazılmalıdır.
+
+kontract mimarisi olarak hardhat kullanılcaktır.
+
+frontend next.js klasörü altında yazılacaktır.
+
+metamask cüzdanı üzerinden uygulamda testnetten monad kullanılacktır.
+metamask entegrasyonu gereklidir.
+
+.env dosyası kullanmayı ihmal etme 
+gitignore hazırla
+
+
+
+ilk baş kontractları hazılamaktan başla 
+
+adım adım beni süreçten bilgilendir 
+
+toplam 4 saat süremiz var göz önünde bulundur hackatlon için bu proje kullanılacak mvp misali olucak
+
+
+
+web sitesi 
+authenticationı firebasede halet
+tasarımda mor renkleri ve renk tonlarını gradientleri kullan
+
+monad database kullanımı uygun düşserse kullan.
