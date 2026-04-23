@@ -11,6 +11,8 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
  *   },
  * } as const;
  */
-const externalContracts = {} as const;
+const externalContracts = {
+  // Escrow reads/writes in this MVP are handled via wagmi + constants (`~~/constants`).
+} as const;
 
 export default externalContracts satisfies GenericContractsDeclaration;

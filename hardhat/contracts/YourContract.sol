@@ -1,78 +1,118 @@
 //SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0 <0.9.0;
 
-// Useful for debugging. Remove when deploying to a live network.
-import "hardhat/console.sol";
-
-// Use openzeppelin to inherit battle-tested implementations (ERC20, ERC721, etc)
-// import "@openzeppelin/contracts/access/Ownable.sol";
-
-/**
- * A smart contract that allows changing a state variable of the contract and tracking the changes
- * It also allows the owner to withdraw the Ether in the contract
- * @author BuidlGuidl
- */
 contract YourContract {
-    // State Variables
-    address public immutable owner;
-    string public greeting = "Building aaaa!!!";
-    bool public premium = false;
-    uint256 public totalCounter = 0;
-    mapping(address => uint) public userGreetingCounter;
-
-    // Events: a way to emit log statements from smart contract that can be listened to by external parties
-    event GreetingChange(address indexed greetingSetter, string newGreeting, bool premium, uint256 value);
-
-    // Constructor: Called once on contract deployment
-    // Check packages/hardhat/deploy/00_deploy_your_contract.ts
-    constructor(address _owner) {
-        owner = _owner;
+    enum OrderStatus {
+        Created,
+        Funded,
+        Shipped,
+        Completed,
+        Cancelled
     }
 
-    // Modifier: used to define a set of rules that must be met before or after a function is executed
-    // Check the withdraw() function
-    modifier isOwner() {
-        // msg.sender: predefined variable that represents address of the account that called the current function
-        require(msg.sender == owner, "Not the Owner");
-        _;
+    struct Order {
+        address seller;
+        address buyer;
+        uint256 itemPrice;
+        uint256 sellerDeposit;
+        bytes32 deliveryQrHash;
+        string itemMetadata;
+        OrderStatus status;
     }
 
-    /**
-     * Function that allows anyone to change the state variable "greeting" of the contract and increase the counters
-     *
-     * @param _newGreeting (string memory) - new greeting to save on the contract
-     */
-    function setGreeting(string memory _newGreeting) public payable {
-        // Print data to the hardhat chain console. Remove when deploying to a live network.
-        console.log("Setting new greeting '%s' from %s", _newGreeting, msg.sender);
+    uint256 public constant DEPOSIT_BPS = 1000; // 10%
+    uint256 public orderCount;
+    mapping(uint256 => Order) public orders;
 
-        // Change state variables
-        greeting = _newGreeting;
-        totalCounter += 1;
-        userGreetingCounter[msg.sender] += 1;
+    event OrderCreated(
+        uint256 indexed orderId,
+        address indexed seller,
+        address indexed buyer,
+        uint256 itemPrice,
+        uint256 sellerDeposit
+    );
+    event OrderFunded(uint256 indexed orderId, address indexed buyer, uint256 amount);
+    event OrderShipped(uint256 indexed orderId);
+    event OrderCompleted(uint256 indexed orderId, uint256 sellerPayout);
+    event OrderCancelled(uint256 indexed orderId);
 
-        // msg.value: built-in global variable that represents the amount of ether sent with the transaction
-        if (msg.value > 0) {
-            premium = true;
-        } else {
-            premium = false;
-        }
-
-        // emit: keyword used to trigger an event
-        emit GreetingChange(msg.sender, _newGreeting, msg.value > 0, msg.value);
+    function calculateRequiredDeposit(uint256 itemPrice) public pure returns (uint256) {
+        return (itemPrice * DEPOSIT_BPS) / 10000;
     }
 
-    /**
-     * Function that allows the owner to withdraw all the Ether in the contract
-     * The function can only be called by the owner of the contract as defined by the isOwner modifier
-     */
-    function withdraw() public isOwner {
-        (bool success, ) = owner.call{ value: address(this).balance }("");
-        require(success, "Failed to send Ether");
+    function createOrder(
+        address buyer,
+        uint256 itemPrice,
+        bytes32 deliveryQrHash,
+        string calldata itemMetadata
+    ) external payable returns (uint256) {
+        require(buyer != address(0), "Buyer required");
+        require(itemPrice > 0, "Price required");
+        require(deliveryQrHash != bytes32(0), "QR hash required");
+
+        uint256 requiredDeposit = calculateRequiredDeposit(itemPrice);
+        require(msg.value == requiredDeposit, "Invalid deposit amount");
+
+        uint256 orderId = ++orderCount;
+        orders[orderId] = Order({
+            seller: msg.sender,
+            buyer: buyer,
+            itemPrice: itemPrice,
+            sellerDeposit: msg.value,
+            deliveryQrHash: deliveryQrHash,
+            itemMetadata: itemMetadata,
+            status: OrderStatus.Created
+        });
+
+        emit OrderCreated(orderId, msg.sender, buyer, itemPrice, msg.value);
+        return orderId;
     }
 
-    /**
-     * Function that allows the contract to receive ETH
-     */
-    receive() external payable {}
+    function fundOrder(uint256 orderId) external payable {
+        Order storage order = orders[orderId];
+        require(order.status == OrderStatus.Created, "Order not fundable");
+        require(msg.sender == order.buyer, "Only buyer");
+        require(msg.value == order.itemPrice, "Invalid payment amount");
+
+        order.status = OrderStatus.Funded;
+        emit OrderFunded(orderId, msg.sender, msg.value);
+    }
+
+    function markShipped(uint256 orderId) external {
+        Order storage order = orders[orderId];
+        require(order.status == OrderStatus.Funded, "Order not funded");
+        require(msg.sender == order.seller, "Only seller");
+
+        order.status = OrderStatus.Shipped;
+        emit OrderShipped(orderId);
+    }
+
+    function confirmDelivery(uint256 orderId, string calldata qrCodeRaw) external {
+        Order storage order = orders[orderId];
+        require(order.status == OrderStatus.Shipped, "Order not shipped");
+        require(msg.sender == order.buyer, "Only buyer");
+        require(keccak256(bytes(qrCodeRaw)) == order.deliveryQrHash, "Invalid QR");
+
+        order.status = OrderStatus.Completed;
+        uint256 payout = order.itemPrice + order.sellerDeposit;
+        _safeTransfer(order.seller, payout);
+
+        emit OrderCompleted(orderId, payout);
+    }
+
+    function cancelOrder(uint256 orderId) external {
+        Order storage order = orders[orderId];
+        require(order.status == OrderStatus.Created, "Cannot cancel");
+        require(msg.sender == order.seller, "Only seller");
+
+        order.status = OrderStatus.Cancelled;
+        _safeTransfer(order.seller, order.sellerDeposit);
+
+        emit OrderCancelled(orderId);
+    }
+
+    function _safeTransfer(address to, uint256 amount) internal {
+        (bool success, ) = to.call{value: amount}("");
+        require(success, "Transfer failed");
+    }
 }

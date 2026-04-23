@@ -1,3 +1,4 @@
+import { defineChain } from "viem";
 import * as chains from "viem/chains";
 
 export type BaseConfig = {
@@ -12,10 +13,37 @@ export type BaseConfig = {
 export type ScaffoldConfig = BaseConfig;
 
 export const DEFAULT_ALCHEMY_API_KEY = "cR4WnXePioePZ5fFrnSiR";
+export const DEFAULT_WALLET_CONNECT_PROJECT_ID = "0d5132f8bec08cf4639591c58e86f23a";
+export const DEFAULT_MONAD_TESTNET_RPC_URL = "https://testnet-rpc.monad.xyz/";
+
+export const monadTestnet = defineChain({
+  id: 10143,
+  name: "Monad Testnet",
+  nativeCurrency: {
+    name: "MON",
+    symbol: "MON",
+    decimals: 18,
+  },
+  rpcUrls: {
+    default: {
+      http: [DEFAULT_MONAD_TESTNET_RPC_URL],
+    },
+    public: {
+      http: [DEFAULT_MONAD_TESTNET_RPC_URL],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "Monad Explorer",
+      url: "https://testnet.monadexplorer.com",
+    },
+  },
+  testnet: true,
+});
 
 const scaffoldConfig = {
   // The networks on which your DApp is live
-  targetNetworks: [chains.hardhat],
+  targetNetworks: [monadTestnet],
   // The interval at which your front-end polls the RPC servers for new data (it has no effect if you only target the local network (default is 4000))
   pollingInterval: 3000,
   // This is ours Alchemy's default API key.
@@ -28,17 +56,18 @@ const scaffoldConfig = {
   rpcOverrides: {
     // Example:
     // [chains.mainnet.id]: "https://mainnet.rpc.buidlguidl.com",
+    [monadTestnet.id]: process.env.NEXT_PUBLIC_MONAD_TESTNET_RPC_URL || DEFAULT_MONAD_TESTNET_RPC_URL,
   },
   // This is ours WalletConnect's default project ID.
   // You can get your own at https://cloud.walletconnect.com
   // It's recommended to store it in an env variable:
   // .env.local for local testing, and in the Vercel/system env config for live apps.
-  walletConnectProjectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || "3a8170812b534d0ff9d794f19a901d64",
+  walletConnectProjectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || DEFAULT_WALLET_CONNECT_PROJECT_ID,
   // Configure Burner Wallet visibility:
   // - "localNetworksOnly": only show when all target networks are local (hardhat/anvil)
   // - "allNetworks": show on any configured target networks
   // - "disabled": completely disable
-  burnerWalletMode: "localNetworksOnly",
+  burnerWalletMode: "disabled",
 } as const satisfies ScaffoldConfig;
 
 export default scaffoldConfig;

@@ -28,7 +28,7 @@ toplam 4 saat süremiz var göz önünde bulundur hackatlon için bu proje kulla
 
 
 web sitesi 
-authenticationı firebasede halet
+authenticationı metamask ile halet
 tasarımda mor renkleri ve renk tonlarını gradientleri kullan
 
 monad database kullanımı uygun düşserse kullan.
