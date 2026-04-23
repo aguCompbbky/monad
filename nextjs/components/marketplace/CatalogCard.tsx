@@ -76,10 +76,14 @@ export const CatalogCard = ({ data, isBuying, buyingSlug, onBuy }: CatalogCardPr
           <button
             className="btn btn-secondary btn-sm gap-1.5 font-bold"
             onClick={() => onBuy(data)}
-            disabled={isBuying && !isCurrentlyBuying}
+            disabled={isBuying}
           >
-            <ShoppingCart className="w-3.5 h-3.5" />
-            Satın Al
+            {isCurrentlyBuying ? (
+              <span className="loading loading-spinner loading-xs" />
+            ) : (
+              <ShoppingCart className="w-3.5 h-3.5" />
+            )}
+            {isCurrentlyBuying ? "Kilitleniyor..." : "Satın Al"}
           </button>
         )}
 

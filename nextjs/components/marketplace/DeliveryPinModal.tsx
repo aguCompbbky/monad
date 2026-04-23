@@ -9,13 +9,14 @@ export type DeliveryContext = {
   title: string;
   priceMon: string;
   revealAt: number;
+  orderId: bigint;
 };
 
 type DeliveryPinModalProps = {
   context: DeliveryContext | null;
   isConfirming: boolean;
   onClose: () => void;
-  onConfirm: (slug: CatalogSlug) => Promise<boolean> | boolean;
+  onConfirm: (slug: CatalogSlug, orderId: bigint, pinCode: string) => Promise<boolean> | boolean;
 };
 
 const REVEAL_DELAY_MS = 10_000;
@@ -37,7 +38,7 @@ export const DeliveryPinModal = ({ context, isConfirming, onClose, onConfirm }: 
     setEnteredPin("");
     setFetchedPin(null);
     setPinError(null);
-  }, [context?.slug]);
+  }, [context?.slug, context?.orderId]);
 
   const remainingMs = useMemo(() => {
     if (!context) return REVEAL_DELAY_MS;
@@ -48,9 +49,9 @@ export const DeliveryPinModal = ({ context, isConfirming, onClose, onConfirm }: 
   const secondsLeft = Math.ceil(remainingMs / 1000);
   const progressPercent = context ? 100 - Math.min(100, Math.round((remainingMs / REVEAL_DELAY_MS) * 100)) : 0;
 
-  // Kargo teslim zamanı dolunca PIN'i sunucudan çek.
+  // PIN'i modal açılır açılmaz arka planda çek (kargo simülasyonuyla paralel).
   useEffect(() => {
-    if (!context || !revealed || fetchedPin || isLoadingPin) return;
+    if (!context) return;
     let cancelled = false;
     setIsLoadingPin(true);
     setPinError(null);
@@ -58,7 +59,10 @@ export const DeliveryPinModal = ({ context, isConfirming, onClose, onConfirm }: 
       .then(async res => {
         if (!res.ok) throw new Error("Kargodan PIN alınamadı");
         const body = (await res.json()) as { pin?: string };
-        if (!cancelled && body.pin) setFetchedPin(body.pin);
+        if (!cancelled) {
+          if (body.pin) setFetchedPin(body.pin);
+          else setPinError("Kargo PIN'i alınamadı, tekrar dene.");
+        }
       })
       .catch(() => {
         if (!cancelled) setPinError("Kargo PIN'i alınamadı, tekrar dene.");
@@ -69,15 +73,16 @@ export const DeliveryPinModal = ({ context, isConfirming, onClose, onConfirm }: 
     return () => {
       cancelled = true;
     };
-  }, [context, revealed, fetchedPin, isLoadingPin]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [context?.slug, context?.orderId]);
 
   const pinCorrect = revealed && fetchedPin !== null && enteredPin === fetchedPin;
 
   if (!context) return null;
 
   const handleConfirm = async () => {
-    if (!pinCorrect) return;
-    const success = await onConfirm(context.slug);
+    if (!pinCorrect || !fetchedPin) return;
+    const success = await onConfirm(context.slug, context.orderId, fetchedPin);
     if (success) onClose();
   };
 
@@ -102,7 +107,7 @@ export const DeliveryPinModal = ({ context, isConfirming, onClose, onConfirm }: 
                 {revealed ? "Ürün kapıda!" : "Kargo yola çıktı"}
               </h3>
               <p className="text-xs text-purple-300/70 mt-0.5">
-                {context.title} · {context.priceMon} MON
+                {context.title} · {context.priceMon} MON · #{context.orderId.toString()}
               </p>
             </div>
           </div>
@@ -125,7 +130,7 @@ export const DeliveryPinModal = ({ context, isConfirming, onClose, onConfirm }: 
                 <div className="flex-1">
                   <p className="text-sm font-bold text-yellow-200">Kargo simülasyonu sürüyor…</p>
                   <p className="text-xs text-yellow-300/70 mt-0.5">
-                    Ödeme henüz yapılmadı. Kargo ulaşınca teslimat PIN&apos;i ekrana gelecek.
+                    Ödemen kontrata kilitlendi. Kargo ulaşınca teslimat PIN&apos;i ekrana gelecek.
                   </p>
                 </div>
               </div>
@@ -156,7 +161,7 @@ export const DeliveryPinModal = ({ context, isConfirming, onClose, onConfirm }: 
                   </div>
                 )}
                 <p className="text-xs text-emerald-300/70 text-center mt-2">
-                  Bu kodu aşağıya gir ve ödemeyi satıcıya serbest bırak.
+                  Bu kodu aşağıya gir, escrow satıcıya bıraksın.
                 </p>
               </div>
             </div>
@@ -192,11 +197,15 @@ export const DeliveryPinModal = ({ context, isConfirming, onClose, onConfirm }: 
           {revealed && fetchedPin && enteredPin.length === 6 && !pinCorrect && (
             <p className="text-xs text-red-400 text-center">PIN eşleşmedi, ekrandaki kodu aynen gir.</p>
           )}
+
+          {!isLoadingPin && fetchedPin === null && pinError && (
+            <p className="text-xs text-red-400 text-center">{pinError}</p>
+          )}
         </div>
 
         <div className="flex gap-2 px-5 pb-5">
           <button className="btn btn-ghost flex-1 text-purple-400" onClick={onClose} disabled={isConfirming}>
-            Vazgeç
+            Sonra
           </button>
           <button
             className="btn btn-primary flex-1 gap-2 font-bold"
@@ -206,12 +215,12 @@ export const DeliveryPinModal = ({ context, isConfirming, onClose, onConfirm }: 
             {isConfirming ? (
               <>
                 <span className="loading loading-spinner loading-sm" />
-                İmzalanıyor…
+                Serbest bırakılıyor…
               </>
             ) : (
               <>
                 <Check className="w-4 h-4" />
-                PIN Doğrula & Öde
+                PIN Onayla & Paraya Çevir
               </>
             )}
           </button>
