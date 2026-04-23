@@ -16,7 +16,7 @@
 @plugin "daisyui/theme" {
   name: "dark";
 
-  --color-primary: #7c3aed;
+  --color-primary: #836ef9;
   --color-primary-content: #f8f5ff;
   --color-secondary: #c026d3;
   --color-secondary-content: #f9fbff;
@@ -24,30 +24,22 @@
   --color-accent-content: #f8f5ff;
   --color-neutral: #09090b;
   --color-neutral-content: #faf5ff;
-  --color-base-100: #0a0714;
-  --color-base-200: #10091f;
-  --color-base-300: #160b2d;
+  --color-base-100: #07030f;
+  --color-base-200: #0d0520;
+  --color-base-300: #130730;
   --color-base-content: #f5f3ff;
   --color-info: #6366f1;
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-error: #f43f5e;
 
-  --radius-field: 1rem;
+  --radius-field: 0.75rem;
   --radius-box: 1rem;
 
   --tt-tailw: 6px;
   --tt-bg: var(--color-primary);
 }
 
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
 @layer base {
   *,
   ::after,
@@ -58,19 +50,20 @@
   }
 
   p {
-    margin: 1rem 0;
+    margin: 0.5rem 0;
   }
 
   body {
     min-height: 100vh;
-    background-image: linear-gradient(to bottom right, #000000, #2e1065, #000000);
+    background-color: #07030f;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(131, 110, 249, 0.25) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(192, 38, 211, 0.12) 0%, transparent 50%);
     color: var(--color-base-content);
+    overflow-x: hidden;
   }
 
-  h1,
-  h2,
-  h3,
-  h4 {
+  h1, h2, h3, h4 {
     margin-bottom: 0.5rem;
     line-height: 1;
   }
@@ -78,22 +71,211 @@
 
 :root,
 [data-theme] {
-  background: #000000;
+  background: #07030f;
 }
 
+/* ── Neon grid background ── */
+.neon-grid {
+  background-image:
+    linear-gradient(rgba(131, 110, 249, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(131, 110, 249, 0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* ── Neon glow text ── */
+.neon-text {
+  text-shadow:
+    0 0 10px rgba(131, 110, 249, 0.9),
+    0 0 30px rgba(131, 110, 249, 0.6),
+    0 0 60px rgba(131, 110, 249, 0.3);
+}
+.neon-text-pink {
+  text-shadow:
+    0 0 10px rgba(192, 38, 211, 0.9),
+    0 0 30px rgba(192, 38, 211, 0.6);
+}
+
+/* ── Neon border glow card ── */
+.neon-card {
+  position: relative;
+  border: 1px solid rgba(131, 110, 249, 0.25);
+  transition: all 0.3s ease;
+}
+.neon-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(131,110,249,0.5), rgba(192,38,211,0.3), transparent);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.neon-card:hover::before {
+  opacity: 1;
+}
+.neon-card:hover {
+  border-color: rgba(131, 110, 249, 0.6);
+  box-shadow:
+    0 0 20px rgba(131, 110, 249, 0.2),
+    0 0 60px rgba(131, 110, 249, 0.08),
+    inset 0 0 20px rgba(131, 110, 249, 0.03);
+  transform: translateY(-2px);
+}
+
+/* ── Keyframe animations ── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(-2deg); }
+  50% { transform: translateY(-14px) rotate(2deg); }
+}
+@keyframes neon-pulse {
+  0%, 100% { box-shadow: 0 0 5px rgba(131,110,249,0.5), 0 0 20px rgba(131,110,249,0.3); }
+  50% { box-shadow: 0 0 15px rgba(131,110,249,0.9), 0 0 40px rgba(131,110,249,0.5), 0 0 80px rgba(131,110,249,0.2); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes scan-line {
+  0% { top: -10%; }
+  100% { top: 110%; }
+}
+@keyframes appear-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes eye-glow {
+  0%, 100% { filter: drop-shadow(0 0 3px #c026d3); }
+  50% { filter: drop-shadow(0 0 10px #c026d3) drop-shadow(0 0 20px #836ef9); }
+}
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes badge-bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+@keyframes bg-pan {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-float { animation: float 3s ease-in-out infinite; }
+.animate-float-slow { animation: float-slow 4s ease-in-out infinite; }
+.animate-neon-pulse { animation: neon-pulse 2s ease-in-out infinite; }
+.animate-appear-up { animation: appear-up 0.5s ease-out forwards; }
+.animate-eye-glow { animation: eye-glow 2s ease-in-out infinite; }
+.animate-spin-slow { animation: spin-slow 8s linear infinite; }
+.animate-badge-bounce { animation: badge-bounce 2s ease-in-out infinite; }
+.animate-bg-pan { animation: bg-pan 4s ease infinite; background-size: 200% 200%; }
+
+/* ── Shimmer button ── */
+.btn-neon {
+  background: linear-gradient(135deg, #836ef9, #c026d3, #836ef9);
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+  border: none;
+  color: white;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.btn-neon:hover {
+  animation: shimmer 1s linear infinite;
+  box-shadow: 0 0 20px rgba(131,110,249,0.7), 0 0 40px rgba(131,110,249,0.4);
+}
+
+/* ── Buy button pulse ring ── */
+.buy-btn-wrapper {
+  position: relative;
+  display: inline-flex;
+}
+.buy-btn-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 9999px;
+  border: 2px solid rgba(131,110,249,0.5);
+  animation: neon-pulse 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ── Scan line effect ── */
+.scan-container {
+  position: relative;
+  overflow: hidden;
+}
+.scan-container::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(131,110,249,0.6), transparent);
+  animation: scan-line 3s linear infinite;
+}
+
+/* ── Buttons ── */
 .btn {
   @apply shadow-md;
   border-radius: 9999rem;
 }
-
 .btn.btn-ghost {
   @apply shadow-none;
+}
+.btn.btn-primary {
+  box-shadow: 0 0 15px rgba(131,110,249,0.4);
+  transition: all 0.2s;
+}
+.btn.btn-primary:hover {
+  box-shadow: 0 0 25px rgba(131,110,249,0.7), 0 0 50px rgba(131,110,249,0.3);
+  transform: translateY(-1px);
+}
+.btn.btn-secondary {
+  box-shadow: 0 0 12px rgba(192,38,211,0.35);
+}
+.btn.btn-secondary:hover {
+  box-shadow: 0 0 20px rgba(192,38,211,0.65);
+  transform: translateY(-1px);
+}
+
+/* ── Input neon focus ── */
+.input:focus, .textarea:focus {
+  outline: none;
+  border-color: rgba(131,110,249,0.7);
+  box-shadow: 0 0 0 2px rgba(131,110,249,0.2), 0 0 15px rgba(131,110,249,0.15);
+}
+
+/* ── Status badge ── */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+}
+
+/* ── Glass card ── */
+.glass-card {
+  background: rgba(13, 5, 32, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .link {
   text-underline-offset: 2px;
 }
-
 .link:hover {
   opacity: 80%;
 }
